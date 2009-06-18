@@ -1,5 +1,0 @@
-C:\Projects\Kayjax\bin\Debug\Kayjax.dll
-C:\Projects\Kayjax\bin\Debug\Kayjax.pdb
-C:\Projects\Kayjax\obj\Debug\ResolveAssemblyReference.cache
-C:\Projects\Kayjax\obj\Debug\Kayjax.dll
-C:\Projects\Kayjax\obj\Debug\Kayjax.pdb

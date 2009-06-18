@@ -1,16 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<jspack src="Src" target=".\" version="1.0.9" minify="true" clean="true">
-  <output name="jQuery" path="Lib\jquery-1.3.2.js" version="false" minify="false">
-    <input path="Lib\jQuery\jquery-1.3.2.js"/>
-    <input path="Lib\jQuery\jquery.json-1.3.js"/>
-    <input path="Lib\jQuery\jquery.parsequery.js"/>
+<jspack src="Src" target=".\" version="1.0.10" minify="true">
+  <output name="jQuery" path="Lib\jquery-1.3.2.js" version="false">
+    <input path=".\..\Lib\jQuery\jquery-1.3.2.js"/>
+    <input path=".\..\Lib\jQuery\jquery.json-1.3.js"/>
+    <input path=".\..\Lib\jQuery\jquery.parsequery.js"/>
   </output>
-  <output path="kayjax-jquery-1.0.9.js">
+  <output name="Kayjax-jQuery" path="kayjax-jquery.js">
     <input path="KayjaxBase.js"/>
     <input path="KayjaxJQuery.js"/>
   </output>
-  <output path="kayjax-prototype-1.0.9.js">
+  <output name="Kayjax-Prototype" path="kayjax-prototype.js">
     <input path="KayjaxBase.js"/>
     <input path="KayjaxPrototype.js"/>
+  </output>
+  <output path=".\..\..\Test\jquery-1.3.2.js" version="false" minify="false">
+    <import name="jQuery"/>
+  </output>
+  <output path=".\..\..\Test\prototype-1.6.0.3.js" version="false" minify="false">
+    <input path=".\..\Lib\prototype-1.6.0.3.js"/>
+  </output>
+  <output path=".\..\..\Test\kayjax-jquery.js">
+    <import name="Kayjax-jQuery"/>
+  </output>
+  <output path=".\..\..\Test\kayjax-prototype.js">
+    <import name="Kayjax-Prototype"/>
   </output>
 </jspack>

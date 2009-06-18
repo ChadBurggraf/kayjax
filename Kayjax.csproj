@@ -54,9 +54,9 @@
     </Compile>
     <Compile Include="Kayson\ApiRequest.cs" />
     <Compile Include="Kayson\ApiResponse.cs" />
-    <Compile Include="Kayson\Attributes\IPermissionAttribute.cs" />
-    <Compile Include="Kayson\Attributes\PermissionJoinType.cs" />
-    <Compile Include="Kayson\Attributes\RolePermissionAttribute.cs" />
+    <Compile Include="Kayson\IPermissionAttribute.cs" />
+    <Compile Include="Kayson\PermissionJoinType.cs" />
+    <Compile Include="Kayson\RolePermissionAttribute.cs" />
     <Compile Include="Kayson\Configuration\KaysonSettings.cs" />
     <Compile Include="Kayson\Configuration\RouteElement.cs" />
     <Compile Include="Kayson\Configuration\RoutesElementCollection.cs" />
@@ -76,6 +76,7 @@
     <Content Include="Kayjax\Script\Lib\JQuery\jquery.json-1.3.js" />
     <Content Include="Kayjax\Script\Lib\JQuery\jquery.parsequery.js" />
     <Content Include="Kayjax\Script\Lib\prototype-1.6.0.3.js" />
+    <Content Include="Kayjax\Script\map.xml" />
     <Content Include="Kayjax\Script\Src\KayjaxBase.js" />
     <Content Include="Kayjax\Script\Src\KayjaxJQuery.js" />
     <Content Include="Kayjax\Script\Src\KayjaxPrototype.js" />
@@ -92,6 +93,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)script $(ProjectDir) true</PreBuildEvent>
+    <PreBuildEvent>$(SolutionDir)Dependencies\jspack /map:"$(ProjectDir)Kayjax\Script\map.xml"</PreBuildEvent>
   </PropertyGroup>
 </Project>

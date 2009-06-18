@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Web;
-using Kayson.Attributes;
 using Kayson.Configuration;
 
 namespace Kayson

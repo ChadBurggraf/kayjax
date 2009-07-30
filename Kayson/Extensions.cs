@@ -112,7 +112,19 @@ namespace Kayson
         /// <returns>A de-serialized object.</returns>
         public static T FromJson<T>(this string str)
         {
-            return str.FromJson<T>(new List<Type>());
+            return str.FromJson<T>(Encoding.Default);
+        }
+
+        /// <summary>
+        /// De-serializes an object from JSON.
+        /// </summary>
+        /// <typeparam name="T">The specific type to run the serialization against.</typeparam>
+        /// <param name="str">The JSON string to de-serialize.</param>
+        /// <param name="encoding">The encoding to use when reading the JSON.</param>
+        /// <returns>A de-serialized object.</returns>
+        public static T FromJson<T>(this string str, Encoding encoding)
+        {
+            return str.FromJson<T>(encoding, new List<Type>());
         }
 
         /// <summary>
@@ -123,6 +135,19 @@ namespace Kayson
         /// <param name="knownTypes">The known types in the object graph.</param>
         /// <returns>A de-serialized object.</returns>
         public static T FromJson<T>(this string str, IEnumerable<Type> knownTypes)
+        {
+            return (T)FromJson(typeof(T), str, Encoding.Default, knownTypes);
+        }
+
+        /// <summary>
+        /// De-serializes an object from JSON.
+        /// </summary>
+        /// <typeparam name="T">The specific type to run the serialization against.</typeparam>
+        /// <param name="str">The JSON string to de-serialize.</param>
+        /// <param name="encoding">The encoding to use when reading the JSON.</param>
+        /// <param name="knownTypes">The known types in the object graph.</param>
+        /// <returns>A de-serialized object.</returns>
+        public static T FromJson<T>(this string str, Encoding encoding, IEnumerable<Type> knownTypes)
         {
             return (T)FromJson(typeof(T), str, knownTypes);
         }
@@ -136,13 +161,26 @@ namespace Kayson
         /// <returns>A de-serialized object.</returns>
         public static object FromJson(Type type, string str, IEnumerable<Type> knownTypes)
         {
+            return FromJson(type, str, Encoding.Default, knownTypes);
+        }
+
+        /// <summary>
+        /// De-serializes an object from JSON.
+        /// </summary>
+        /// <param name="type">The type of object to de-serialize.</param>
+        /// <param name="str">The JSON string to de-serialize.</param>
+        /// <param name="encoding">The encoding to use when reading the JSON.</param>
+        /// <param name="knownTypes">The known types in the object graph.</param>
+        /// <returns>A de-serialized object.</returns>
+        public static object FromJson(Type type, string str, Encoding encoding, IEnumerable<Type> knownTypes)
+        {
             try
             {
                 if (!String.IsNullOrEmpty(str))
                 {
                     using (Stream stream = new MemoryStream())
                     {
-                        using (StreamWriter writer = new StreamWriter(stream))
+                        using (StreamWriter writer = new StreamWriter(stream, encoding))
                         {
                             writer.Write(str);
                             writer.Flush();

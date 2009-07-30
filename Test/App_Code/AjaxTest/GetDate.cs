@@ -10,17 +10,18 @@ namespace AjaxTest
     {
         public int? AddDays { get; set; }
 
-        public override bool Do(out object output, out string reason)
+        public override ApiActionResult Do()
         {
-            output = AddDays != null ? DateTime.Now.AddDays(AddDays.Value) : DateTime.Now;
-            reason = String.Empty;
-            return true;
+            return new ApiActionResult()
+            {
+                Value = AddDays != null ? DateTime.Now.AddDays(AddDays.Value) : DateTime.Now,
+                Success = true
+            };
         }
 
-        public override bool Validate(out string reason)
+        public override ApiValidationResult Validate()
         {
-            reason = String.Empty;
-            return true;
+            return new ApiValidationResult() { Success = true };
         }
     }
 }

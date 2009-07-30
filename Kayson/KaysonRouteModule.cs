@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Caching;
@@ -11,6 +13,7 @@ namespace Kayson
     /// <summary>
     /// Implements IHttpModule to rewrite Kayson routes to the KaysonHandler.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonRouteModule : IHttpModule
     {
         #region Constants
@@ -31,10 +34,10 @@ namespace Kayson
         /// <summary>
         /// Initializes the module.
         /// </summary>
-        /// <param name="application">The HttpApplication that is handling the current request.</param>
-        public void Init(HttpApplication application)
+        /// <param name="context">The HttpApplication that is handling the current request.</param>
+        public void Init(HttpApplication context)
         {
-            application.BeginRequest += new EventHandler(application_BeginRequest);
+            context.BeginRequest += new EventHandler(context_BeginRequest);
         }
 
         #endregion
@@ -71,9 +74,9 @@ namespace Kayson
         protected virtual string GetRoute(HttpContext context)
         {
             string routesTo = null;
-            string virtualUrl = context.Request.RawUrl.Substring(context.Request.ApplicationPath.Length).ToLower();
+            string virtualUrl = context.Request.RawUrl.Substring(context.Request.ApplicationPath.Length).ToUpperInvariant();
 
-            if (!virtualUrl.StartsWith("/")) 
+            if (!virtualUrl.StartsWith("/", StringComparison.Ordinal)) 
             {
                 virtualUrl = "/" + virtualUrl;
             }
@@ -138,7 +141,7 @@ namespace Kayson
         /// <summary>
         /// Raises application's BeginRequest event.
         /// </summary>
-        private void application_BeginRequest(object sender, EventArgs e)
+        private void context_BeginRequest(object sender, EventArgs e)
         {
             HttpContext context = ((HttpApplication)sender).Context;
             string routesTo = GetRoute(context);

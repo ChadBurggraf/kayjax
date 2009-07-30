@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace Kayson
@@ -6,7 +7,8 @@ namespace Kayson
     /// <summary>
     /// Interface for permission attributes.
     /// </summary>
-    public interface IPermissionAttribute
+    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "Most appropriate name.")]
+    public interface IPermission
     {
         /// <summary>
         /// Ensures that the attributes requirements are met.

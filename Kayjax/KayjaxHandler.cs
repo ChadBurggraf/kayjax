@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -16,6 +18,7 @@ namespace Kayjax
     /// <summary>
     /// Base class for handling Ajax UI update requests.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public abstract class KayjaxHandler : Page, IRequiresSessionState
     {
         private List<Exception> exceptions = new List<Exception>();
@@ -24,8 +27,9 @@ namespace Kayjax
 
         /// <summary>
         /// When implemented in a derived class, gets the parameters to use when 
-        /// instantiated a control by type.
+        /// instantiating a control by type.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "By design for usability.")]
         protected abstract object[] ControlParameters { get; }
 
         /// <summary>
@@ -36,6 +40,7 @@ namespace Kayjax
         /// <summary>
         /// When implemented in a derived class, gets the application-relative URL of the control to render.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "By design for usability.")]
         protected abstract string ControlUrl { get; }
 
         #endregion
@@ -56,13 +61,14 @@ namespace Kayjax
         /// </summary>
         protected override void OnError(EventArgs e)
         {
-            exceptions.Add(Context.Error ?? new Exception("An unhandled exception occurred."));
+            exceptions.Add(Context.Error ?? new InvalidOperationException("An unhandled exception occurred."));
             base.OnError(e);
         }
 
         /// <summary>
         /// Raises the page's Load event.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We want to control the output to the client.")]
         protected override void OnLoad(EventArgs e)
         {
             // Set the response ID.
@@ -79,7 +85,7 @@ namespace Kayjax
             try
             {
                 // Ensure we're allowed.
-                IPermissionAttribute failedOn;
+                IPermission failedOn;
                 if (!Context.EnsurePermitted(this.GetType(), out failedOn))
                 {
                     throw new KayjaxCustomException("Access denied.");
@@ -111,6 +117,7 @@ namespace Kayjax
         /// Renders the page to an HtmlTextWriter.
         /// </summary>
         /// <param name="writer">The HtmlTextWriter to write to.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We want to control the output to the client.")]
         protected override void Render(HtmlTextWriter writer)
         {
             try
@@ -122,7 +129,7 @@ namespace Kayjax
 
                     // Write the page.
                     StringBuilder sb = new StringBuilder();
-                    HtmlTextWriter w = new HtmlTextWriter(new StringWriter(sb));
+                    HtmlTextWriter w = new HtmlTextWriter(new StringWriter(sb, CultureInfo.InvariantCulture));
                     RenderChildren(w);
 
                     // Get rid of the form wrapper.
@@ -159,7 +166,7 @@ namespace Kayjax
                     message = custom != null ? custom.Message : "An unspecified error occurred.";
                 }
 
-                writer.Write(String.Format("<div class=\"kayjaxerror\">{0}</div>", message));
+                writer.Write(String.Format(CultureInfo.InvariantCulture, "<div class=\"kayjaxerror\">{0}</div>", message));
             }
         }
 

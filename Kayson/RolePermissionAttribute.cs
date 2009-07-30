@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace Kayson
@@ -7,7 +8,8 @@ namespace Kayson
     /// Describes a role-based permission requirement.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-    public class RolePermissionAttribute : Attribute, IPermissionAttribute
+    [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "By design.")]
+    public class RolePermissionAttribute : Attribute, IPermission
     {
         private string allow;
 

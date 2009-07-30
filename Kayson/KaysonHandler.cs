@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -13,6 +14,7 @@ namespace Kayson
     /// <summary>
     /// Handles API requests.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonHandler : IHttpHandler
     {
         private string json;
@@ -28,7 +30,8 @@ namespace Kayson
         /// <summary>
         /// Gets the JSON input of the request.
         /// </summary>
-        public virtual string JSON
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
+        public virtual string Json
         {
             get
             {
@@ -54,17 +57,18 @@ namespace Kayson
         /// <summary>
         /// Gets the type of the request being made.
         /// </summary>
-        /// <returns>The current request type.</returns>
+        /// <returns>The type of the request being made.</returns>
         /// <exception cref="Kayson.InvalidRequestTypeException"></exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "An exception might be raised.")]
         protected virtual Type GetRequestType()
         {
             try
             {
                 return Type.GetType(KaysonRouteModule.CurrentTargetRoute, true, true);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidRequestTypeException();
+                throw new InvalidRequestTypeException(ex.Message, ex);
             }
         }
 
@@ -72,6 +76,7 @@ namespace Kayson
         /// Processes the request.
         /// </summary>
         /// <param name="context">The HttpContext to process the request for.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "By design to ensure JSON is returned.")]
         public virtual void ProcessRequest(HttpContext context)
         {
             // Empty response.
@@ -81,29 +86,39 @@ namespace Kayson
             // The know types we'll use for serializing the response.
             object[] knownTypes = new object[0];
 
-            if (KaysonSettings.Section.RequireSsl == RequireSSLMode.Off ||
-                (KaysonSettings.Section.RequireSsl == RequireSSLMode.RemoteOnly && context.Request.IsLocal) ||
+            if (KaysonSettings.Section.RequireSsl == RequireSslMode.Off ||
+                (KaysonSettings.Section.RequireSsl == RequireSslMode.RemoteOnly && context.Request.IsLocal) ||
                 Regex.IsMatch(context.Request.Url.Scheme, "^https$", RegexOptions.IgnoreCase))
             {
                 try
                 {
                     // Instantiate the request.
                     Type requestType = GetRequestType();
-                    ApiRequest request = (ApiRequest)Extensions.FromJson(requestType, JSON, new List<Type>());
+                    ApiRequest request = (ApiRequest)Extensions.FromJson(requestType, Json, new List<Type>());
 
                     // Permitted?
-                    IPermissionAttribute failedOn;
+                    IPermission failedOn;
                     if (context.EnsurePermitted(requestType, out failedOn))
                     {
                         // Get the known types.
                         knownTypes = requestType.GetCustomAttributes(typeof(KnownTypeAttribute), true);
 
-                        // Do it.
-                        string reason;
-                        object output = null;
-                        response.Success = request.Validate(out reason) && request.Do(out output, out reason);
-                        response.Reason = reason;
-                        response.Value = output;
+                        // Validate.
+                        ApiValidationResult valid = request.Validate();
+
+                        if (valid.Success)
+                        {
+                            // Do it.
+                            ApiActionResult result = request.Do();
+                            response.Success = result.Success;
+                            response.Reason = result.Reason;
+                            response.Value = result.Value;
+                        }
+                        else
+                        {
+                            response.Success = false;
+                            response.Reason = valid.Reason;
+                        }
                     }
                     else
                     {

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kayson.Configuration
 {
     /// <summary>
     /// Represents the Kayson configuration section.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonSettings : ConfigurationSection
     {
         /// <summary>
         /// Gets the application-relative URL of the KaysonHandlerFactory.
         /// </summary>
         [ConfigurationProperty("handlerUrl", IsRequired = false, DefaultValue = "~/kayson.ashx")]
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "By design for storage in configuration.")]
         public string HandlerUrl
         {
             get { return (string)(this["handlerUrl"] ?? "~/kayson.ashx"); }
@@ -20,10 +23,10 @@ namespace Kayson.Configuration
         /// <summary>
         /// Gets a value indicating whether SSL is required whem making requests.
         /// </summary>
-        [ConfigurationProperty("requireSsl", IsRequired = false, DefaultValue = RequireSSLMode.Off)]
-        public RequireSSLMode RequireSsl
+        [ConfigurationProperty("requireSsl", IsRequired = false, DefaultValue = RequireSslMode.Off)]
+        public RequireSslMode RequireSsl
         {
-            get { return (RequireSSLMode)(this["requireSsl"] ?? RequireSSLMode.Off); }
+            get { return (RequireSslMode)(this["requireSsl"] ?? RequireSslMode.Off); }
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace Kayson.Configuration
     /// <summary>
     /// Defines the possible modes for the RequireSSL attribute in KaysonSettings.
     /// </summary>
-    public enum RequireSSLMode
+    public enum RequireSslMode
     {
         /// <summary>
         /// Identifies that require SSL is turned off.

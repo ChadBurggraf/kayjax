@@ -11,11 +11,20 @@ namespace Kayson.Configuration
     /// </summary>
     public sealed class RoutesElementCollection : ConfigurationElementCollection, ICollection<RouteElement>
     {
+        /// <summary>
+        /// Creates a new configuration element instance.
+        /// </summary>
+        /// <returns>The newly created instance.</returns>
         protected override ConfigurationElement CreateNewElement()
         {
             return new RouteElement();
         }
 
+        /// <summary>
+        /// Gets the key for the given configuration element.
+        /// </summary>
+        /// <param name="element">The configuration element to get the key for.</param>
+        /// <returns>The element's key.</returns>
         protected override object GetElementKey(ConfigurationElement element)
         {
             return ((RouteElement)element).Pattern;

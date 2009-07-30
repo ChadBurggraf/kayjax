@@ -35,6 +35,11 @@ namespace Kayjax
         /// <param name="innerException">The exception that caused this exception to be thrown.</param>
         public KayjaxCustomException(string message, Exception innerException) : base(message, innerException) { }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="info">The serialization info.</param>
+        /// <param name="context">The streaming context.</param>
         protected KayjaxCustomException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

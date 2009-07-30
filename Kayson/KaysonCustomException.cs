@@ -35,6 +35,11 @@ namespace Kayson
         /// <param name="innerException">The inner exception who's message should be rendered to the client.</param>
         public KaysonCustomException(Exception innerException) : base(innerException.Message, innerException) { }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="info">The serialization info.</param>
+        /// <param name="context">The streaming context.</param>
         protected KaysonCustomException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

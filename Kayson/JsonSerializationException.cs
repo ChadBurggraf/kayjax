@@ -38,6 +38,11 @@ namespace Kayson
         public JsonSerializationException(Type type, Exception innerException)
             : base(String.Format(CultureInfo.InvariantCulture, "There was an error during JSON serialization of type \"{0}\".", type.Name), innerException) { }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="info">The serialization info.</param>
+        /// <param name="context">The streaming context.</param>
         protected JsonSerializationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

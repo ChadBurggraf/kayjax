@@ -67,6 +67,27 @@ Kayjax = {
         return reason;
     },
     
+    // Prepares a hash of parameters for jsonification.
+    prepareParameters: function(parameters) {
+        var prop, type;
+        
+        if (typeof parameters !== "undefined") {
+            for(prop in parameters) {
+                if (parameters.hasOwnProperty(prop)) {
+                    type = Object.prototype.toString.call(parameters[prop]) ;
+                    
+                    if (type === "[object Date]") {
+                        parameters[prop] = parameters[prop].toJson();
+                    } else if (type === "[object Object]") {
+                        parameters[prop] = Kayjax.prepareParameters(parameters[prop]);
+                    }
+                }
+            }
+        }
+        
+        return parameters;
+    },
+    
     // Resolves an ASP.NET application-relative URL.
     resolveUrl: function(url) {
         var rootExp = /^~\//;
@@ -200,7 +221,7 @@ Kayjax = {
 
 // Converts a date to an ASP.NET JSON string.
 Date.prototype.toJson = function() {
-    return '"\\\/Date(' + this.getTime() + ')\\\/"';
+    return "/Date(" + this.getTime() + ")/";
 };
 
 // Gets a short date string.

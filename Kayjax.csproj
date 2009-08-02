@@ -72,8 +72,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Kayjax\Script\kayjax-jquery-1.2.0.js" />
-    <Content Include="Kayjax\Script\kayjax-prototype-1.2.0.js" />
+    <Content Include="Kayjax\Script\kayjax-jquery-1.2.1.js" />
+    <Content Include="Kayjax\Script\kayjax-prototype-1.2.1.js" />
     <Content Include="Kayjax\Script\Lib\jquery-1.3.2.js" />
     <Content Include="Kayjax\Script\Lib\jQuery\jquery-1.3.2.js" />
     <Content Include="Kayjax\Script\Lib\jQuery\jquery.json-1.3.js" />

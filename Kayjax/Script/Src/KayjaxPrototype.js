@@ -27,7 +27,7 @@ Object.extend(Kayjax, {
             
             Kayjax.requests.push(queued);
             
-            postBody = options.parameters ? Object.toJSON(options.parameters) : "";
+            postBody = options.parameters ? Object.toJSON(Kayjax.prepareParameters(options.parameters)) : "";
             
             params = {
                 requestHeaders: ["X-Request-Id", queued.id],

@@ -29,7 +29,7 @@ $.extend(Kayjax, {
             
             Kayjax.requests.push(queued);
             
-            postBody = options.parameters ? $.toJSON(options.parameters) : "";
+            postBody = options.parameters ? $.toJSON(Kayjax.prepareParameters(options.parameters)) : "";
 
             params = {
                 contentType: "application/json",

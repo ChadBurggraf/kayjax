@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="Tasty.Build.GetVersion" AssemblyFile="Source\Dependencies\Tasty.dll"/>
+  
+  <PropertyGroup>
+    <BuildDir Condition="'$(BuildDir)' == ''">$(MSBuildProjectDirectory)\Build</BuildDir>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <SourceDir>$(MSBuildProjectDirectory)\Source</SourceDir>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Release'">
+      <PropertyGroup>
+        <JsPackActions>true</JsPackActions>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <JsPackActions>false</JsPackActions>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="Build">
+    <RemoveDir Directories="$(BuildDir)"/>
+    <MakeDir Directories="$(BuildDir)"/>
+    
+    <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="KayjaxOutput"/>
+    </MSBuild>
+    <ItemGroup>
+      <KayjaxOutput Include="$(SourceDir)\Kayjax\bin\Release\Kayjax.xml"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(KayjaxOutput)" DestinationFolder="$(BuildDir)"/>
+
+    <GetVersion AssemblyFile="$(BuildDir)\Kayjax.dll">
+      <Output TaskParameter="Major" PropertyName="Major"/>
+      <Output TaskParameter="Minor" PropertyName="Minor"/>
+      <Output TaskParameter="Build" PropertyName="Build"/>
+    </GetVersion>
+    <Exec Command='$(SourceDir)\Dependencies\jspack.exe /map:"$(SourceDir)\Kayjax\Kayjax\Script\map.xml" /target:"$(BuildDir)" /version:$(Major).$(Minor).$(Build) /actions:$(JsPackActions)'/>
+
+    <ItemGroup>
+      <Scripts Include="$(BuildDir)\*.js"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(Scripts)" DestinationFolder="$(SourceDir)\Kayjax.Demo"/>
+  </Target>
+</Project>

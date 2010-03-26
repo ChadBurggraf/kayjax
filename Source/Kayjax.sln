@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kayjax", "Kayjax\Kayjax.csproj", "{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B0A119EB-536F-46C4-AC01-79DE7C3F1A9C}"
+	ProjectSection(SolutionItems) = preProject
+		build.proj = build.proj
+		SolutionInfo.cs = SolutionInfo.cs
+		SolutionVersionInfo.cs = SolutionVersionInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kayjax.Demo", "Kayjax.Demo\Kayjax.Demo.csproj", "{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|.NET = Release|.NET
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Release|.NET.ActiveCfg = Release|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C273B3AC-EC0D-40E7-A81E-83846C8B7EEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Release|.NET.ActiveCfg = Release|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

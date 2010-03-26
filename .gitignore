@@ -1,5 +1,6 @@
 Bin
 bin
+Build
 obj
 *.csproj.user
 *.suo

@@ -1,8 +1,14 @@
-﻿using System;
-using System.Configuration;
+﻿//-----------------------------------------------------------------------
+// <copyright file="RouteElement.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson.Configuration
 {
+    using System;
+    using System.Configuration;
+
     /// <summary>
     /// Represents a Route configuration element.
     /// </summary>

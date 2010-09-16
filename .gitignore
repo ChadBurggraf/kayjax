@@ -4,3 +4,5 @@ Build
 obj
 *.csproj.user
 *.suo
+*.Cache
+*.snk

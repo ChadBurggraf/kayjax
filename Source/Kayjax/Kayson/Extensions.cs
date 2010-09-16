@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="Extensions.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -98,39 +102,6 @@ namespace Kayson
         }
 
         /// <summary>
-        /// Converts a base-64 encoded string to standard encoding.
-        /// </summary>
-        /// <param name="value">The string to decode.</param>
-        /// <returns>The decoded string.</returns>
-        public static string FromBase64(this string value)
-        {
-            if (!String.IsNullOrEmpty(value))
-            {
-                Decoder decoder = new UTF8Encoding().GetDecoder();
-
-                byte[] buffer = Convert.FromBase64String(value);
-                char[] chars = new char[decoder.GetCharCount(buffer, 0, buffer.Length)];
-                decoder.GetChars(buffer, 0, buffer.Length, chars, 0);
-
-                value = new String(chars);
-            }
-
-            return value ?? String.Empty;
-        }
-
-        /// <summary>
-        /// De-serializes an object from JSON.
-        /// </summary>
-        /// <param name="type">The type of object to de-serialize.</param>
-        /// <param name="value">The JSON string to de-serialize.</param>
-        /// <returns>A de-serialized object.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
-        public static object FromJson(Type type, string value)
-        {
-            return FromJson(type, value, new List<Type>());
-        }
-
-        /// <summary>
         /// De-serializes an object from JSON.
         /// </summary>
         /// <param name="type">The type of object to de-serialize.</param>
@@ -179,35 +150,6 @@ namespace Kayson
             {
                 throw new JsonSerializationException(type, ex);
             }
-        }
-
-        /// <summary>
-        /// Converts a string to it's base-64 equivalent.
-        /// </summary>
-        /// <param name="value">The string to encode.</param>
-        /// <returns>The encoded string.</returns>
-        public static string ToBase64(this string value)
-        {
-            if (!String.IsNullOrEmpty(value))
-            {
-                byte[] buffer = new byte[value.Length];
-                buffer = Encoding.UTF8.GetBytes(value);
-                value = Convert.ToBase64String(buffer);
-            }
-
-            return value ?? String.Empty;
-        }
-
-        /// <summary>
-        /// Serializes an object to JSON. Object must be Serializable.
-        /// </summary>
-        /// <typeparam name="T">The specific type to run the serialization against.</typeparam>
-        /// <param name="value">The object to serialize.</param>
-        /// <returns>The serialized JSON.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
-        public static string ToJson<T>(this T value)
-        {
-            return value.ToJson<T>(new List<Type>());
         }
 
         /// <summary>

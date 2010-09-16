@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="KaysonCustomException.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -16,32 +20,47 @@ namespace Kayson
         /// <summary>
         /// Initializes a new instance of the KaysonCustomException class.
         /// </summary>
-        public KaysonCustomException() : base() { }
+        public KaysonCustomException() 
+            : base() 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KaysonCustomException class.
         /// </summary>
         /// <param name="message">The message to render to the client.</param>
-        public KaysonCustomException(string message) : base(message) { }
+        public KaysonCustomException(string message) 
+            : base(message) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KaysonCustomException class.
         /// </summary>
         /// <param name="message">The message to render to the client.</param>
         /// <param name="innerException">The inner exception that caused this exception.</param>
-        public KaysonCustomException(string message, Exception innerException) : base(message, innerException) { }
+        public KaysonCustomException(string message, Exception innerException) 
+            : base(message, innerException) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KaysonCustomException class.
         /// </summary>
         /// <param name="innerException">The inner exception who's message should be rendered to the client.</param>
-        public KaysonCustomException(Exception innerException) : base(innerException.Message, innerException) { }
+        public KaysonCustomException(Exception innerException) 
+            : base(innerException.Message, innerException) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KaysonCustomException class.
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        protected KaysonCustomException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected KaysonCustomException(SerializationInfo info, StreamingContext context) 
+            : base(info, context) 
+        { 
+        }
     }
 }

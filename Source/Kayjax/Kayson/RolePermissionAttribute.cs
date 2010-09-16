@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="RolePermissionAttribute.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -16,7 +20,7 @@ namespace Kayson
         private string allow;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the RolePermissionAttribute class.
         /// </summary>
         /// <param name="allow">The name of a role that is allowed to access the resource.
         /// ? means only authenticated users are allowed; * means all users are allowed.
@@ -27,18 +31,21 @@ namespace Kayson
         }
 
         /// <summary>
-        /// Gets the name of a role that is allowed to access the resource.
+        /// Gets or sets the name of a role that is allowed to access the resource.
         /// </summary>
         public string Allow 
         { 
-            get { return allow ?? "*"; }
-            protected set { allow = value; }
+            get { return this.allow ?? "*"; }
+            protected set { this.allow = value; }
         }
 
         /// <summary>
         /// Gets the operator to use when joining permissions of this type together.
         /// </summary>
-        public PermissionJoinType Join { get { return PermissionJoinType.Or; } }
+        public PermissionJoinType Join 
+        { 
+            get { return PermissionJoinType.Or; } 
+        }
 
         /// <summary>
         /// Ensures that the attributes requirements are met.
@@ -47,9 +54,9 @@ namespace Kayson
         /// <returns>True if the request is permitted, false otherwise.</returns>
         public virtual bool EnsurePermitted(HttpContext context)
         {
-            return (Allow == "*") ||
-                (Allow == "?" && context.User.Identity.IsAuthenticated) ||
-                (context.User.Identity.IsAuthenticated && context.User.IsInRole(Allow));
+            return this.Allow == "*" ||
+                (this.Allow == "?" && context.User.Identity.IsAuthenticated) ||
+                (context.User.Identity.IsAuthenticated && context.User.IsInRole(this.Allow));
         }
     }
 }

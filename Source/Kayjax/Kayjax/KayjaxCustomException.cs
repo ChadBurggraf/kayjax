@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="KayjaxCustomException.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayjax
 {
@@ -16,32 +20,47 @@ namespace Kayjax
         /// <summary>
         /// Initializes a new instance of the KayjaxCustomException class.
         /// </summary>
-        public KayjaxCustomException() : base() { }
+        public KayjaxCustomException() 
+            : base() 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KayjaxCustomException class.
         /// </summary>
         /// <param name="message">The exception's message.</param>
-        public KayjaxCustomException(string message) : base(message) { }
+        public KayjaxCustomException(string message) 
+            : base(message) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KayjaxCustomException class.
         /// </summary>
         /// <param name="ex">The inner exception who's message should be rendered to the client.</param>
-        public KayjaxCustomException(Exception ex) : base(ex.Message, ex) { }
+        public KayjaxCustomException(Exception ex) 
+            : base(ex.Message, ex) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KayjaxCustomException class.
         /// </summary>
         /// <param name="message">The exception's message.</param>
         /// <param name="innerException">The exception that caused this exception to be thrown.</param>
-        public KayjaxCustomException(string message, Exception innerException) : base(message, innerException) { }
+        public KayjaxCustomException(string message, Exception innerException) 
+            : base(message, innerException) 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the KayjaxCustomException class.
         /// </summary>
         /// <param name="info">The serialization info.</param>
         /// <param name="context">The streaming context.</param>
-        protected KayjaxCustomException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected KayjaxCustomException(SerializationInfo info, StreamingContext context) 
+            : base(info, context) 
+        { 
+        }
     }
 }

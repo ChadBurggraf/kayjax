@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="KaysonHandler.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -39,40 +43,22 @@ namespace Kayson
         {
             get
             {
-                if (json == null)
+                if (this.json == null)
                 {
                     if (HttpContext.Current.Request.InputStream != null && HttpContext.Current.Request.InputStream.Length > 0)
                     {
                         using (StreamReader reader = new StreamReader(HttpContext.Current.Request.InputStream))
                         {
-                            json = reader.ReadToEnd();
+                            this.json = reader.ReadToEnd();
                         }
                     }
                     else
                     {
-                        json = String.Empty;
+                        this.json = String.Empty;
                     }
                 }
 
-                return json;
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of the request being made.
-        /// </summary>
-        /// <returns>The type of the request being made.</returns>
-        /// <exception cref="Kayson.InvalidRequestTypeException"></exception>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "An exception might be raised.")]
-        protected virtual Type GetRequestType()
-        {
-            try
-            {
-                return Type.GetType(KaysonRouteModule.CurrentTargetRoute, true, true);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidRequestTypeException(ex.Message, ex);
+                return this.json;
             }
         }
 
@@ -96,8 +82,8 @@ namespace Kayson
             {
                 try
                 {
-                    Type requestType = GetRequestType();
-                    ApiRequest request = (ApiRequest)Extensions.FromJson(requestType, Json, new List<Type>());
+                    Type requestType = this.GetRequestType();
+                    ApiRequest request = (ApiRequest)Extensions.FromJson(requestType, this.Json, new List<Type>());
 
                     // Permitted?
                     IPermission failedOn;
@@ -184,27 +170,7 @@ namespace Kayson
             string respJson = response.ToJson<ApiResponse>(types);
 
             // Strip the type identifiers.
-            respJson = Regex.Replace(respJson, "({)?(,)?\"__type\":\".*?\"(})?(,)?", new MatchEvaluator(delegate(Match match)
-            {
-                string str = (String.IsNullOrEmpty(match.Groups[1].Value)) ? match.Groups[2].Value : match.Groups[1].Value;
-
-                if (str == "{")
-                {
-                    if (!String.IsNullOrEmpty(match.Groups[3].Value))
-                    {
-                        str += "}";
-                    }
-                }
-                else
-                {
-                    if (!String.IsNullOrEmpty(match.Groups[3].Value))
-                    {
-                        str = "}";
-                    }
-                }
-
-                return str;
-            }));
+            respJson = Regex.Replace(respJson, "({)?(,)?\"__type\":\".*?\"(})?(,)?", new MatchEvaluator(TypeIdentifiersEvaluator));
 
             if (gzip && context.AcceptsGZip())
             {
@@ -214,6 +180,51 @@ namespace Kayson
 
             context.Response.Write(respJson);
             context.Response.End();
+        }
+
+        /// <summary>
+        /// Gets the type of the request being made.
+        /// </summary>
+        /// <returns>The type of the request being made.</returns>
+        /// <exception cref="Kayson.InvalidRequestTypeException"></exception>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "An exception might be raised.")]
+        protected virtual Type GetRequestType()
+        {
+            try
+            {
+                return Type.GetType(KaysonRouteModule.CurrentTargetRoute, true, true);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidRequestTypeException(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// Evaluates the given regular epression match for stripping type identifiers.
+        /// </summary>
+        /// <param name="match">The match to evaluate.</param>
+        /// <returns>The results of the evaluation.</returns>
+        private static string TypeIdentifiersEvaluator(Match match)
+        {
+            string str = String.IsNullOrEmpty(match.Groups[1].Value) ? match.Groups[2].Value : match.Groups[1].Value;
+
+            if (str == "{")
+            {
+                if (!String.IsNullOrEmpty(match.Groups[3].Value))
+                {
+                    str += "}";
+                }
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(match.Groups[3].Value))
+                {
+                    str = "}";
+                }
+            }
+
+            return str;
         }
     }
 }

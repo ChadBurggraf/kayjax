@@ -1,5 +1,8 @@
-﻿
-using Kayson;
+﻿//-----------------------------------------------------------------------
+// <copyright file="KayjaxHandler.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayjax
 {
@@ -13,6 +16,7 @@ namespace Kayjax
     using System.Web.SessionState;
     using System.Web.UI;
     using System.Web.UI.HtmlControls;
+    using Kayson;
     
     /// <summary>
     /// Base class for handling Ajax UI update requests.
@@ -23,25 +27,8 @@ namespace Kayjax
         private List<Exception> exceptions = new List<Exception>();
 
         /// <summary>
-        /// When implemented in a derived class, gets the parameters to use when 
-        /// instantiating a control by type.
-        /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "By design for usability.")]
-        protected abstract object[] ControlParameters { get; }
-
-        /// <summary>
-        /// When implemented in a derived class, gets the type of control to render.
-        /// </summary>
-        protected abstract string ControlType { get; }
-
-        /// <summary>
-        /// When implemented in a derived class, gets the application-relative URL of the control to render.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "By design for usability.")]
-        protected abstract string ControlUrl { get; }
-
-        /// <summary>
-        /// ViewState is dsabled.
+        /// Gets or sets a value indicating whether ViewState is enabled.
+        /// Overridden to always return false.
         /// </summary>
         public override bool EnableViewState
         {
@@ -50,17 +37,36 @@ namespace Kayjax
         }
 
         /// <summary>
+        /// Gets the parameters to use when instantiating a control by type.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "By design for usability.")]
+        protected abstract object[] ControlParameters { get; }
+
+        /// <summary>
+        /// Gets the type of control to render.
+        /// </summary>
+        protected abstract string ControlType { get; }
+
+        /// <summary>
+        /// Gets the application-relative URL of the control to render.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "By design for usability.")]
+        protected abstract string ControlUrl { get; }
+
+        /// <summary>
         /// Raises the page's Error event.
         /// </summary>
+        /// <param name="e">The event arguments.</param>
         protected override void OnError(EventArgs e)
         {
-            exceptions.Add(Context.Error ?? new InvalidOperationException("An unhandled exception occurred."));
+            this.exceptions.Add(Context.Error ?? new InvalidOperationException("An unhandled exception occurred."));
             base.OnError(e);
         }
 
         /// <summary>
         /// Raises the page's Load event.
         /// </summary>
+        /// <param name="e">The event arguments.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We want to control the output to the client.")]
         protected override void OnLoad(EventArgs e)
         {
@@ -85,24 +91,24 @@ namespace Kayjax
                 }
 
                 // Make sure we have something to do.
-                if (String.IsNullOrEmpty(ControlType) && String.IsNullOrEmpty(ControlUrl))
+                if (String.IsNullOrEmpty(this.ControlType) && String.IsNullOrEmpty(this.ControlUrl))
                 {
                     throw new ArgumentException("Either ControlType or ControlUrl must have a value.");
                 }
 
                 // Decide what to do.
-                if (!String.IsNullOrEmpty(ControlType))
+                if (!String.IsNullOrEmpty(this.ControlType))
                 {
-                    form.Controls.Add(LoadControl(Type.GetType(ControlType), ControlParameters));
+                    form.Controls.Add(LoadControl(Type.GetType(this.ControlType), this.ControlParameters));
                 }
                 else
                 {
-                    form.Controls.Add(LoadControl(ControlUrl));
+                    form.Controls.Add(LoadControl(this.ControlUrl));
                 }
             }
             catch (Exception ex)
             {
-                exceptions.Add(ex);
+                this.exceptions.Add(ex);
             }
         }
 
@@ -115,7 +121,7 @@ namespace Kayjax
         {
             try
             {
-                if (exceptions.Count == 0)
+                if (this.exceptions.Count == 0)
                 {
                     // Re-base all of the URLs on the page.
                     this.AbsolutizeUrls();
@@ -136,26 +142,26 @@ namespace Kayjax
                     writer.Write(content.Trim());
 
                     // Clear the exceptions.
-                    exceptions.Clear();
+                    this.exceptions.Clear();
                 }
             }
             catch (Exception ex)
             {
-                exceptions.Add(ex);
+                this.exceptions.Add(ex);
             }
 
             // Write an error message?
-            if (exceptions.Count > 0)
+            if (this.exceptions.Count > 0)
             {
                 string message = String.Empty;
 
                 if (Request.IsLocal)
                 {
-                    message = String.Join(", ", exceptions.ConvertAll<string>(new Converter<Exception, string>(delegate(Exception ex) { return ex.Message; })).ToArray());
+                    message = String.Join(", ", this.exceptions.ConvertAll<string>(new Converter<Exception, string>(delegate(Exception ex) { return ex.Message; })).ToArray());
                 }
                 else
                 {
-                    Exception custom = exceptions.Find(new Predicate<Exception>(delegate(Exception ex) { return ex is KayjaxCustomException; }));
+                    Exception custom = this.exceptions.Find(new Predicate<Exception>(delegate(Exception ex) { return ex is KayjaxCustomException; }));
                     message = custom != null ? custom.Message : "An unspecified error occurred.";
                 }
 

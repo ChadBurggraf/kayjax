@@ -5,9 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kayjax", "Kayjax\Kayjax.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B0A119EB-536F-46C4-AC01-79DE7C3F1A9C}"
 	ProjectSection(SolutionItems) = preProject
-		build.proj = build.proj
+		..\build.proj = ..\build.proj
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\README.md = ..\README.md
 		SolutionInfo.cs = SolutionInfo.cs
-		SolutionVersionInfo.cs = SolutionVersionInfo.cs
+		Web.config.template = Web.config.template
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kayjax.Demo", "Kayjax.Demo\Kayjax.Demo.csproj", "{FFECD9AD-3012-48B1-ABB3-535EC812C9F4}"

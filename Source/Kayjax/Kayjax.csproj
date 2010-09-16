@@ -12,8 +12,9 @@
     <AssemblyName>Kayjax</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Kayjax.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,9 +54,6 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\SolutionVersionInfo.cs">
-      <Link>Properties\SolutionVersionInfo.cs</Link>
-    </Compile>
     <Compile Include="Kayjax\Extensions.cs" />
     <Compile Include="Kayjax\KayjaxCustomException.cs" />
     <Compile Include="Kayjax\KayjaxHandler.cs">
@@ -91,9 +89,6 @@
     <Content Include="Kayjax\Script\KayjaxBase.js" />
     <Content Include="Kayjax\Script\KayjaxJQuery.js" />
     <Content Include="Kayjax\Script\KayjaxPrototype.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Kayjax.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

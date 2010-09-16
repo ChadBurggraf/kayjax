@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="IPermission.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -13,15 +17,15 @@ namespace Kayson
     public interface IPermission
     {
         /// <summary>
+        /// Gets the operator to use when joining permissions of this type together.
+        /// </summary>
+        PermissionJoinType Join { get; }
+
+        /// <summary>
         /// Ensures that the attributes requirements are met.
         /// </summary>
         /// <param name="context">The current HttpContext.</param>
         /// <returns>True if the request is permitted, false otherwise.</returns>
         bool EnsurePermitted(HttpContext context);
-
-        /// <summary>
-        /// Gets the operator to use when joining permissions of this type together.
-        /// </summary>
-        PermissionJoinType Join { get; }
     }
 }

@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="KaysonSettings.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson.Configuration
 {
@@ -12,6 +16,14 @@ namespace Kayson.Configuration
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonSettings : ConfigurationSection
     {
+        /// <summary>
+        /// Gets the KaysonSettings section from the configuration.
+        /// </summary>
+        public static KaysonSettings Section
+        {
+            get { return (KaysonSettings)ConfigurationManager.GetSection("kayson") ?? new KaysonSettings(); }
+        }
+
         /// <summary>
         /// Gets or sets the application-relative URL of the KaysonHandlerFactory.
         /// </summary>
@@ -40,14 +52,6 @@ namespace Kayson.Configuration
         public RoutesElementCollection Routes
         {
             get { return (RoutesElementCollection)(this["routes"] ?? (this["routes"] = new RoutesElementCollection())); }
-        }
-
-        /// <summary>
-        /// Gets the KaysonSettings section from the configuration.
-        /// </summary>
-        public static KaysonSettings Section
-        {
-            get { return (KaysonSettings)ConfigurationManager.GetSection("kayson") ?? new KaysonSettings(); }
         }
     }
 }

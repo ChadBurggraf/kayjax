@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="KaysonRouteModule.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -18,13 +22,9 @@ namespace Kayson
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonRouteModule : IHttpModule
     {
-        #region Constants
-
         private const string RouteCacheKey = "Kayson.Modules.RouteModule.RouteCache";
         private const string TargetItemsKey = "Kayson.Modules.RouteModule.CurrentTargetRoute";
         private static readonly object locker = new object();
-
-        #endregion
 
         /// <summary>
         /// Gets the target route currently being handled.
@@ -47,7 +47,18 @@ namespace Kayson
         /// <summary>
         /// Disposes of any unmanaged resources.
         /// </summary>
-        public void Dispose() { }
+        public void Dispose() 
+        { 
+        }
+
+        /// <summary>
+        /// Initializes the module.
+        /// </summary>
+        /// <param name="context">The HttpApplication that is handling the current request.</param>
+        public void Init(HttpApplication context)
+        {
+            context.BeginRequest += new EventHandler(this.ContextBeginRequest);
+        }
 
         /// <summary>
         /// Gets a Kayson route for a request.
@@ -107,15 +118,6 @@ namespace Kayson
         }
 
         /// <summary>
-        /// Initializes the module.
-        /// </summary>
-        /// <param name="context">The HttpApplication that is handling the current request.</param>
-        public void Init(HttpApplication context)
-        {
-            context.BeginRequest += new EventHandler(ContextBeginRequest);
-        }
-
-        /// <summary>
         /// Rewrites tthe current request to the Kayson handler.
         /// </summary>
         /// <param name="context">The HttpContext to rewrite.</param>
@@ -134,11 +136,11 @@ namespace Kayson
         private void ContextBeginRequest(object sender, EventArgs e)
         {
             HttpContext context = ((HttpApplication)sender).Context;
-            string routesTo = GetRoute(context);
+            string routesTo = this.GetRoute(context);
 
             if (!String.IsNullOrEmpty(routesTo))
             {
-                Rewrite(context, routesTo);
+                this.Rewrite(context, routesTo);
             }
         }
     }

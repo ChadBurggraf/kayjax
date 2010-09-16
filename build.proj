@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask TaskName="Tasty.Build.GetVersion" AssemblyFile="Source\Dependencies\Tasty.dll"/>
+  <UsingTask TaskName="Tasty.Build.GetVersion" AssemblyFile="Tools\Tasty.dll"/>
   
   <PropertyGroup>
     <BuildDir Condition="'$(BuildDir)' == ''">$(MSBuildProjectDirectory)\Build</BuildDir>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <KeyFile>$(MSBuildProjectDirectory)\Source\Kayjax.snk</KeyFile>
     <SourceDir>$(MSBuildProjectDirectory)\Source</SourceDir>
+    <ToolsDir>$(MSBuildProjectDirectory)\Tools</ToolsDir>
   </PropertyGroup>
 
   <Choose>
@@ -21,11 +23,24 @@
     </Otherwise>
   </Choose>
 
+  <Choose>
+    <When Condition="Exists('$(KeyFile)')">
+      <PropertyGroup>
+        <SignAssembly>true</SignAssembly>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <SignAssembly>false</SignAssembly>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
   <Target Name="Build">
     <RemoveDir Directories="$(BuildDir)"/>
     <MakeDir Directories="$(BuildDir)"/>
     
-    <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration)">
+    <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration);SignAssembly=$(SignAssembly);AssemblyOriginatorKeyFile=$(KeyFile)">
       <Output TaskParameter="TargetOutputs" ItemName="KayjaxOutput"/>
     </MSBuild>
     <ItemGroup>
@@ -38,7 +53,7 @@
       <Output TaskParameter="Minor" PropertyName="Minor"/>
       <Output TaskParameter="Build" PropertyName="Build"/>
     </GetVersion>
-    <Exec Command='$(SourceDir)\Dependencies\jspack.exe /map:"$(SourceDir)\Kayjax\Kayjax\Script\map.xml" /target:"$(BuildDir)" /version:$(Major).$(Minor).$(Build) /actions:$(JsPackActions)'/>
+    <Exec Command='$(ToolsDir)\jspack.exe /map:"$(SourceDir)\Kayjax\Kayjax\Script\map.xml" /target:"$(BuildDir)" /version:$(Major).$(Minor).$(Build) /actions:$(JsPackActions)'/>
 
     <ItemGroup>
       <Scripts Include="$(BuildDir)\*.js"/>

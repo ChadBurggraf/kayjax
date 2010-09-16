@@ -58,9 +58,6 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\SolutionVersionInfo.cs">
-      <Link>Properties\SolutionVersionInfo.cs</Link>
-    </Compile>
     <Compile Include="GetDate.cs" />
     <Compile Include="Controls\HelloWorld.ascx.cs">
       <DependentUpon>HelloWorld.ascx</DependentUpon>

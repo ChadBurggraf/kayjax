@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="RoutesElementCollection.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson.Configuration
 {
@@ -7,33 +11,32 @@ namespace Kayson.Configuration
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Represents a collection of RouteElements in the configuration.
     /// </summary>
     public sealed class RoutesElementCollection : ConfigurationElementCollection, ICollection<RouteElement>
     {
-        /// <summary>
-        /// Gets the number of elements in the collection
-        /// </summary>
-        int ICollection<RouteElement>.Count
-        {
-            get { return base.Count; }
-        }
+        #region Public Instance Properties
 
         /// <summary>
         /// Gets a value indicating whether the colleciton is read only.
         /// </summary>
-        bool ICollection<RouteElement>.IsReadOnly
+        public new bool IsReadOnly
         {
-            get { return base.IsReadOnly(); }
+            get { return false; }
         }
+
+        #endregion
+
+        #region Public Instance Methods
 
         /// <summary>
         /// Adds a new item to the collection.
         /// </summary>
         /// <param name="item">The item to add.</param>
-        void ICollection<RouteElement>.Add(RouteElement item)
+        public void Add(RouteElement item)
         {
             BaseAdd(item);
         }
@@ -41,7 +44,7 @@ namespace Kayson.Configuration
         /// <summary>
         /// Clears the collection.
         /// </summary>
-        void ICollection<RouteElement>.Clear()
+        public void Clear()
         {
             BaseClear();
         }
@@ -51,9 +54,21 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="item">The item to check for.</param>
         /// <returns>True if the collection contains the item, false otherwise.</returns>
-        bool ICollection<RouteElement>.Contains(RouteElement item)
+        public bool Contains(RouteElement item)
         {
-            return BaseIndexOf(item) > -1;
+            return this.Any(i => i.Pattern.Equals(item.Pattern, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Gets an enumerator that can be used to enumerate over the collection.
+        /// </summary>
+        /// <returns>The collection's enumerator.</returns>
+        public new IEnumerator<RouteElement> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return BaseGet(i) as RouteElement;
+            }
         }
 
         /// <summary>
@@ -61,27 +76,9 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="array">The array to copy elements to.</param>
         /// <param name="arrayIndex">The index in the array to start copying at.</param>
-        void ICollection<RouteElement>.CopyTo(RouteElement[] array, int arrayIndex)
+        public void CopyTo(RouteElement[] array, int arrayIndex)
         {
             base.CopyTo(array, arrayIndex);
-        }
-
-        /// <summary>
-        /// Gets an enumerator that can be used to enumerate over the collection.
-        /// </summary>
-        /// <returns>The collection's enumerator.</returns>
-        IEnumerator<RouteElement> IEnumerable<RouteElement>.GetEnumerator()
-        {
-            return (IEnumerator<RouteElement>)base.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Gets an enumerator that can be used to enumerate over the collection.
-        /// </summary>
-        /// <returns>The collection's enumerator.</returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return base.GetEnumerator();
         }
 
         /// <summary>
@@ -89,21 +86,22 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="item">The item to remove.</param>
         /// <returns>True if the item was found and removed, false otherwise.</returns>
-        bool ICollection<RouteElement>.Remove(RouteElement item)
+        public bool Remove(RouteElement item)
         {
-            lock (this)
-            {
-                int count = Count;
-                BaseRemove(item);
+            bool exists = this.Contains(item);
+            BaseRemove(GetElementKey(item));
 
-                return count != Count;
-            }
+            return exists;
         }
 
+        #endregion
+
+        #region Protected Instance Methods
+
         /// <summary>
-        /// Creates a new configuration element instance.
+        /// Creates a new instance of the collection's contained <see cref="ConfigurationElement"/> type.
         /// </summary>
-        /// <returns>The newly created instance.</returns>
+        /// <returns>A new <see cref="ConfigurationElement"/> instance.</returns>
         protected override ConfigurationElement CreateNewElement()
         {
             return new RouteElement();
@@ -118,5 +116,7 @@ namespace Kayson.Configuration
         {
             return ((RouteElement)element).Pattern;
         }
+
+        #endregion
     }
 }

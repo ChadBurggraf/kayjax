@@ -1,4 +1,8 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="ApiResponse.cs" company="Tasty Codes">
+//     Copyright (c) 2008 Chad Burggraf.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Kayson
 {
@@ -14,7 +18,9 @@ namespace Kayson
         /// <summary>
         /// Initializes a new instance of the ApiResponse class.
         /// </summary>
-        public ApiResponse() { }
+        public ApiResponse() 
+        { 
+        }
 
         /// <summary>
         /// Initializes a new instance of the ApiResponse class.

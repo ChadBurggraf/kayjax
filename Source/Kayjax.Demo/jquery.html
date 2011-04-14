@@ -4,8 +4,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>Kayjax JQuery Tests</title>
-	<script type="text/javascript" src="jquery-1.3.2.js"></script>
-	<script type="text/javascript" src="kayjax-jquery-1.4.0.js"></script>
+	<script type="text/javascript" src="jquery-1.5.2.js"></script>
+	<script type="text/javascript" src="kayjax-jquery-1.5.0.js"></script>
 </head>
 
 <body>
@@ -49,7 +49,7 @@
         }
     };
     
-    $("#parameters1").html($.toJSON(Kayjax.prepareParameters(parameters)));
+    $("#parameters1").html(JSON.stringify(Kayjax.prepareParameters(parameters)));
 });</code></pre>
     <script type="text/javascript">
         $(function() {
@@ -63,7 +63,7 @@
                 }
             };
             
-            $("#parameters1").html($.toJSON(Kayjax.prepareParameters(parameters)));
+            $("#parameters1").html(JSON.stringify(Kayjax.prepareParameters(parameters)));
         });
     </script>
     <p>

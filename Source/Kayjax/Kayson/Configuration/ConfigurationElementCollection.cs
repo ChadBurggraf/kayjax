@@ -1,29 +1,28 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="RoutesElementCollection.cs" company="Tasty Codes">
-//     Copyright (c) 2008 Chad Burggraf.
+// <copyright file="ConfigurationElementCollection.cs" company="Tasty Codes">
+//     Copyright (c) 2011 Chad Burggraf.
 // </copyright>
 //-----------------------------------------------------------------------
 
 namespace Kayson.Configuration
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
 
     /// <summary>
-    /// Represents a collection of RouteElements in the configuration.
+    /// Represents the base class for <see cref="ConfigurationElementCollection"/> implementors.
     /// </summary>
-    public sealed class RoutesElementCollection : ConfigurationElementCollection, ICollection<RouteElement>
+    /// <typeparam name="T">The type of the configuration elements contained in the collection.</typeparam>
+    public abstract class ConfigurationElementCollection<T> : ConfigurationElementCollection, ICollection<T>
+        where T : ConfigurationElement
     {
         #region Public Instance Properties
 
         /// <summary>
         /// Gets a value indicating whether the colleciton is read only.
         /// </summary>
-        public new bool IsReadOnly
+        public virtual new bool IsReadOnly
         {
             get { return false; }
         }
@@ -36,7 +35,7 @@ namespace Kayson.Configuration
         /// Adds a new item to the collection.
         /// </summary>
         /// <param name="item">The item to add.</param>
-        public void Add(RouteElement item)
+        public virtual void Add(T item)
         {
             BaseAdd(item);
         }
@@ -44,7 +43,7 @@ namespace Kayson.Configuration
         /// <summary>
         /// Clears the collection.
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             BaseClear();
         }
@@ -54,20 +53,17 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="item">The item to check for.</param>
         /// <returns>True if the collection contains the item, false otherwise.</returns>
-        public bool Contains(RouteElement item)
-        {
-            return this.Any(i => i.Pattern.Equals(item.Pattern, StringComparison.OrdinalIgnoreCase));
-        }
+        public abstract bool Contains(T item);
 
         /// <summary>
         /// Gets an enumerator that can be used to enumerate over the collection.
         /// </summary>
         /// <returns>The collection's enumerator.</returns>
-        public new IEnumerator<RouteElement> GetEnumerator()
+        public virtual new IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return BaseGet(i) as RouteElement;
+                yield return BaseGet(i) as T;
             }
         }
 
@@ -76,7 +72,7 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="array">The array to copy elements to.</param>
         /// <param name="arrayIndex">The index in the array to start copying at.</param>
-        public void CopyTo(RouteElement[] array, int arrayIndex)
+        public virtual void CopyTo(T[] array, int arrayIndex)
         {
             base.CopyTo(array, arrayIndex);
         }
@@ -86,7 +82,7 @@ namespace Kayson.Configuration
         /// </summary>
         /// <param name="item">The item to remove.</param>
         /// <returns>True if the item was found and removed, false otherwise.</returns>
-        public bool Remove(RouteElement item)
+        public virtual bool Remove(T item)
         {
             bool exists = this.Contains(item);
             BaseRemove(GetElementKey(item));
@@ -104,17 +100,7 @@ namespace Kayson.Configuration
         /// <returns>A new <see cref="ConfigurationElement"/> instance.</returns>
         protected override ConfigurationElement CreateNewElement()
         {
-            return new RouteElement();
-        }
-
-        /// <summary>
-        /// Gets the key for the given configuration element.
-        /// </summary>
-        /// <param name="element">The configuration element to get the key for.</param>
-        /// <returns>The element's key.</returns>
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((RouteElement)element).Pattern;
+            return (ConfigurationElement)Activator.CreateInstance(typeof(T));
         }
 
         #endregion

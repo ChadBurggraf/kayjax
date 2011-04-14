@@ -12,7 +12,7 @@ namespace Kayson
     /// <summary>
     /// Exception thrown when the type of request being made is invalid.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class InvalidRequestTypeException : Exception
     {
         /// <summary>

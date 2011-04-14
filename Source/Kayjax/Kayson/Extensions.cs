@@ -27,7 +27,7 @@ namespace Kayson
         /// </summary>
         /// <param name="context">The HTTP context to get GZip acceptance for.</param>
         /// <returns>True if the requesting user agent accepts GZip responses, false otherwise.</returns>
-        public static bool AcceptsGZip(this HttpContext context)
+        public static bool AcceptsGZip(this HttpContextBase context)
         {
             return (context.Request.Headers["accept-encoding"] ?? String.Empty).ToUpperInvariant().Contains("GZIP");
         }
@@ -41,6 +41,19 @@ namespace Kayson
         /// <returns>True if the user can access the resource, false otherwise.</returns>
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", Justification = "By design.")]
         public static bool EnsurePermitted(this HttpContext context, MemberInfo type, out IPermission failedOn)
+        {
+            return new HttpContextWrapper(context).EnsurePermitted(type, out failedOn);
+        }
+
+        /// <summary>
+        /// Ensures that a user is permitted to access a resource.
+        /// </summary>
+        /// <param name="context">The HttpContext of the user accessing the resource.</param>
+        /// <param name="type">The type to search for permission attributes on.</param>
+        /// <param name="failedOn">The IPermissionAttribute that rejected the request upon failure.</param>
+        /// <returns>True if the user can access the resource, false otherwise.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", Justification = "By design.")]
+        public static bool EnsurePermitted(this HttpContextBase context, MemberInfo type, out IPermission failedOn)
         {
             failedOn = null;
             object[] attrs = type.GetCustomAttributes(typeof(IPermission), true);

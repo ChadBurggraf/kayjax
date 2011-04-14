@@ -44,10 +44,17 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Runtime.Serialization.Plists, Version=1.3.0.0, Culture=neutral, PublicKeyToken=721d4f12726eb029, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lib\System.Runtime.Serialization.Plists.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceModel.Web">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -63,14 +70,25 @@
     <Compile Include="Kayson\ApiRequest.cs" />
     <Compile Include="Kayson\ApiResponse.cs" />
     <Compile Include="Kayson\ApiResult.cs" />
+    <Compile Include="Kayson\BinaryPlistRequestReader.cs" />
+    <Compile Include="Kayson\BinaryPlistResponseWriter.cs" />
+    <Compile Include="Kayson\Configuration\ConfigurationElementCollection.cs" />
+    <Compile Include="Kayson\Configuration\ReaderElement.cs" />
+    <Compile Include="Kayson\Configuration\ReaderElementCollection.cs" />
     <Compile Include="Kayson\Configuration\RequireSslMode.cs" />
+    <Compile Include="Kayson\Configuration\WriterElement.cs" />
+    <Compile Include="Kayson\Configuration\WriterElementCollection.cs" />
     <Compile Include="Kayson\GZipAttribute.cs" />
     <Compile Include="Kayson\IPermission.cs" />
+    <Compile Include="Kayson\IRequestReader.cs" />
+    <Compile Include="Kayson\IResponseWriter.cs" />
+    <Compile Include="Kayson\JsonRequestReader.cs" />
+    <Compile Include="Kayson\JsonResponseWriter.cs" />
     <Compile Include="Kayson\PermissionJoinType.cs" />
     <Compile Include="Kayson\RolePermissionAttribute.cs" />
     <Compile Include="Kayson\Configuration\KaysonSettings.cs" />
     <Compile Include="Kayson\Configuration\RouteElement.cs" />
-    <Compile Include="Kayson\Configuration\RoutesElementCollection.cs" />
+    <Compile Include="Kayson\Configuration\RouteElementCollection.cs" />
     <Compile Include="Kayson\Extensions.cs" />
     <Compile Include="Kayson\InvalidRequestTypeException.cs" />
     <Compile Include="Kayson\JsonSerializationException.cs" />
@@ -80,11 +98,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Kayjax\Script\Lib\jquery-1.3.2.js" />
-    <Content Include="Kayjax\Script\Lib\jQuery\jquery-1.3.2.js" />
-    <Content Include="Kayjax\Script\Lib\jQuery\jquery.json-1.3.js" />
+    <Content Include="Kayjax\Script\Lib\jQuery\jquery-1.5.2.js" />
     <Content Include="Kayjax\Script\Lib\jQuery\jquery.parsequery.js" />
-    <Content Include="Kayjax\Script\Lib\prototype-1.6.1.js" />
+    <Content Include="Kayjax\Script\Lib\jQuery\json2.js" />
+    <Content Include="Kayjax\Script\Lib\prototype-1.7.0.js" />
     <Content Include="Kayjax\Script\map.xml" />
     <Content Include="Kayjax\Script\KayjaxBase.js" />
     <Content Include="Kayjax\Script\KayjaxJQuery.js" />

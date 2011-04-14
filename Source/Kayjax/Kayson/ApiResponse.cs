@@ -12,29 +12,18 @@ namespace Kayson
     /// <summary>
     /// Represents an API response sent to the client after an API request has been processed.
     /// </summary>
-    [Serializable(), DataContract()]
+    [DataContract]
     public class ApiResponse
     {
         /// <summary>
         /// Initializes a new instance of the ApiResponse class.
         /// </summary>
         public ApiResponse() 
-        { 
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ApiResponse class.
-        /// </summary>
-        /// <param name="success">A value indicating whether the request was successful.</param>
-        /// <param name="reason">A reason for request failure if applicable.</param>
-        /// <param name="value">A return value containing the results of the request.</param>
-        /// <param name="allowed">A value indicating whether the user was granted access to the request.</param>
-        public ApiResponse(bool success, string reason, object value, bool allowed)
         {
-            this.Success = success;
-            this.Reason = reason;
-            this.Value = value;
-            this.Allowed = allowed;
+            this.Success = true;
+            this.Reason = String.Empty;
+            this.Allowed = true;
+            this.StatusCode = 200;
         }
 
         /// <summary>
@@ -48,6 +37,12 @@ namespace Kayson
         /// </summary>
         [DataMember(Name = "reason")]
         public string Reason { get; set; }
+
+        /// <summary>
+        /// Gets or sets the HTTP status code to send with the response.
+        /// </summary>
+        [IgnoreDataMember]
+        public int StatusCode { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the request was successful.

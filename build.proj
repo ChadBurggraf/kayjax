@@ -6,6 +6,7 @@
     <BuildDir Condition="'$(BuildDir)' == ''">$(MSBuildProjectDirectory)\Build</BuildDir>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <KeyFile>$(MSBuildProjectDirectory)\Source\Kayjax.snk</KeyFile>
+    <LibDir>$(MSBuildProjectDirectory)\Lib</LibDir>
     <SourceDir>$(MSBuildProjectDirectory)\Source</SourceDir>
     <ToolsDir>$(MSBuildProjectDirectory)\Tools</ToolsDir>
   </PropertyGroup>
@@ -39,14 +40,13 @@
   <Target Name="Build">
     <RemoveDir Directories="$(BuildDir)"/>
     <MakeDir Directories="$(BuildDir)"/>
+
+    <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration);SignAssembly=$(SignAssembly);AssemblyOriginatorKeyFile=$(KeyFile)"/>
+
+    <Message Text="Merging assemblies into 'Kayjax.dll'..."/>
+    <Exec Command='"$(ToolsDir)\ILMerge\ILMerge.exe" /internalize /out:"$(BuildDir)\Kayjax.dll" "$(SourceDir)\Kayjax\bin\$(Configuration)\Kayjax.dll" "$(LibDir)\System.Runtime.Serialization.Plists.dll"'/>
     
-    <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration);SignAssembly=$(SignAssembly);AssemblyOriginatorKeyFile=$(KeyFile)">
-      <Output TaskParameter="TargetOutputs" ItemName="KayjaxOutput"/>
-    </MSBuild>
-    <ItemGroup>
-      <KayjaxOutput Include="$(SourceDir)\Kayjax\bin\Release\Kayjax.xml"/>
-    </ItemGroup>
-    <Copy SourceFiles="@(KayjaxOutput)" DestinationFolder="$(BuildDir)"/>
+    <Copy SourceFiles="$(SourceDir)\Kayjax\bin\Release\Kayjax.xml" DestinationFolder="$(BuildDir)"/>
 
     <GetVersion AssemblyFile="$(BuildDir)\Kayjax.dll">
       <Output TaskParameter="Major" PropertyName="Major"/>

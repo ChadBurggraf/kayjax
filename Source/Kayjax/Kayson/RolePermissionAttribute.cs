@@ -52,7 +52,7 @@ namespace Kayson
         /// </summary>
         /// <param name="context">The current HttpContext.</param>
         /// <returns>True if the request is permitted, false otherwise.</returns>
-        public virtual bool EnsurePermitted(HttpContext context)
+        public virtual bool EnsurePermitted(HttpContextBase context)
         {
             return this.Allow == "*" ||
                 (this.Allow == "?" && context.User.Identity.IsAuthenticated) ||

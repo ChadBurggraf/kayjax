@@ -13,7 +13,7 @@ namespace Kayson
     /// <summary>
     /// Represents a custom exception who's message will always be rendered to the client.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class KaysonCustomException : Exception
     {

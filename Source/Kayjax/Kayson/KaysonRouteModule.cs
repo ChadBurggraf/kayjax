@@ -27,21 +27,20 @@ namespace Kayson
         private static readonly object locker = new object();
 
         /// <summary>
-        /// Gets the target route currently being handled.
+        /// Gets the target route for the given HTTP context.
         /// </summary>
-        public static string CurrentTargetRoute
+        /// <param name="context">The HTTP context to get the target route for.</param>
+        /// <returns>A target route, or String.Empty if none was found.</returns>
+        public static string GetTargetRoute(HttpContextBase context)
         {
-            get
+            string route = null;
+
+            if (context != null)
             {
-                string route = null;
-
-                if (HttpContext.Current != null)
-                {
-                    route = (string)(HttpContext.Current.Items[TargetItemsKey] ?? String.Empty);
-                }
-
-                return route ?? String.Empty;
+                route = (string)(context.Items[TargetItemsKey] ?? String.Empty);
             }
+
+            return route ?? String.Empty;
         }
 
         /// <summary>
@@ -118,7 +117,7 @@ namespace Kayson
         }
 
         /// <summary>
-        /// Rewrites tthe current request to the Kayson handler.
+        /// Rewrites the current request to the Kayson handler.
         /// </summary>
         /// <param name="context">The HttpContext to rewrite.</param>
         /// <param name="routesTo">The target type in the Kayson route.</param>

@@ -13,7 +13,7 @@ namespace Kayson
     /// <summary>
     /// Base class for API requests.
     /// </summary>
-    [DataContract()]
+    [DataContract]
     public abstract class ApiRequest
     {
         /// <summary>

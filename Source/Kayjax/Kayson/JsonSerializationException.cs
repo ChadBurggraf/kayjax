@@ -14,7 +14,7 @@ namespace Kayson
     /// <summary>
     /// Exception thrown when JSON serialization fails.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Spelling is correct.")]
     public class JsonSerializationException : Exception
     {

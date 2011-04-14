@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <jspack src=".\">
   <outputAction name="Compress" executable="java.exe" arguments="-jar ..\..\..\..\Tools\yuicompressor-2.4.2.jar --type js" global="true"/>
-  <output name="jQuery" path="jquery-1.3.2.js" version="false">
-    <input path="Lib\jQuery\jquery-1.3.2.js"/>
-    <input path="Lib\jQuery\jquery.json-1.3.js"/>
+  <output name="jQuery" path="jquery-1.5.2.js" version="false">
+    <input path="Lib\jQuery\json2.js"/>
+    <input path="Lib\jQuery\jquery-1.5.2.js"/>
     <input path="Lib\jQuery\jquery.parsequery.js"/>
   </output>
-  <output name="Prototype" path="prototype-1.6.1.js" version="false" actions="false">
-    <input path="Lib\prototype-1.6.1.js"/>
+  <output name="Prototype" path="prototype-1.7.0.js" version="false" actions="false">
+    <input path="Lib\prototype-1.7.0.js"/>
   </output>
   <output name="Kayjax-jQuery" path="kayjax-jquery.js">
     <input path="KayjaxBase.js"/>

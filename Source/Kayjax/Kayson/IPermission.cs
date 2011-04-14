@@ -26,6 +26,6 @@ namespace Kayson
         /// </summary>
         /// <param name="context">The current HttpContext.</param>
         /// <returns>True if the request is permitted, false otherwise.</returns>
-        bool EnsurePermitted(HttpContext context);
+        bool EnsurePermitted(HttpContextBase context);
     }
 }

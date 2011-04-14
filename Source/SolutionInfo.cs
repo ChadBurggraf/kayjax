@@ -17,6 +17,11 @@ using System.Runtime.InteropServices;
     Scope = "Assembly",
     Target = "Kayjax.dll")]
 
+[assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames",
+    Justification = "Signed during a release build.",
+    Scope = "Assembly",
+    Target = "Kayjax.dll")]
+
 [assembly: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly",
     Justification = "Spelling is correct.",
     Scope = "Namespace",
@@ -46,5 +51,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.4.0.0")]
-[assembly: AssemblyFileVersion("1.4.0.0")]
+[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]

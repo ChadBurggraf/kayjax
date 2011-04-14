@@ -29,7 +29,7 @@ $.extend(Kayjax, {
             
             Kayjax.requests.push(queued);
             
-            postBody = options.parameters ? $.toJSON(Kayjax.prepareParameters(options.parameters)) : "";
+            postBody = options.parameters ? JSON.stringify(Kayjax.prepareParameters(options.parameters)) : "";
 
             params = {
                 contentType: "application/json",
@@ -45,7 +45,7 @@ $.extend(Kayjax, {
             
             if (params.async) {
                 params.complete = function(transport) {
-                    Kayjax.response(transport, $.evalJSON);
+                    Kayjax.response(transport, JSON.parse);
                 };
             }
             

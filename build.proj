@@ -27,6 +27,7 @@
   <Choose>
     <When Condition="Exists('$(KeyFile)')">
       <PropertyGroup>
+        <KeyFileArgs>/keyfile:"$(KeyFile)"</KeyFileArgs>
         <SignAssembly>true</SignAssembly>
       </PropertyGroup>
     </When>
@@ -44,7 +45,7 @@
     <MSBuild Projects="$(SourceDir)\Kayjax\Kayjax.csproj" Properties="Configuration=$(Configuration);SignAssembly=$(SignAssembly);AssemblyOriginatorKeyFile=$(KeyFile)"/>
 
     <Message Text="Merging assemblies into 'Kayjax.dll'..."/>
-    <Exec Command='"$(ToolsDir)\ILMerge\ILMerge.exe" /internalize /out:"$(BuildDir)\Kayjax.dll" "$(SourceDir)\Kayjax\bin\$(Configuration)\Kayjax.dll" "$(LibDir)\System.Runtime.Serialization.Plists.dll"'/>
+    <Exec Command='"$(ToolsDir)\ILMerge\ILMerge.exe" /internalize $(KeyFileArgs) /out:"$(BuildDir)\Kayjax.dll" "$(SourceDir)\Kayjax\bin\$(Configuration)\Kayjax.dll" "$(LibDir)\System.Runtime.Serialization.Plists.dll"'/>
     
     <Copy SourceFiles="$(SourceDir)\Kayjax\bin\Release\Kayjax.xml" DestinationFolder="$(BuildDir)"/>
 

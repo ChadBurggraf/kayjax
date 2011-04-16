@@ -70,6 +70,7 @@ namespace Kayson
         public virtual void ProcessRequest(HttpContextBase context)
         {
             ApiRequest request = null;
+            MatchedRoute route = null;
             ApiResponse response = new ApiResponse();
             Type[] knownTypes = new Type[0];
 
@@ -77,14 +78,14 @@ namespace Kayson
             {
                 try
                 {
-                    Type requestType = this.GetRequestType(context);
-                    request = this.GetRequestReader(context, readers).ReadRequest(context, requestType, response);
+                    route = this.GetRequestRoute(context);
+                    request = this.GetRequestReader(context, route, readers).ReadRequest(context, route.RouteType, response);
 
                     // Permitted?
                     IPermission failedOn;
-                    if (context.EnsurePermitted(requestType, out failedOn))
+                    if (context.EnsurePermitted(route.RouteType, out failedOn))
                     {
-                        knownTypes = requestType.GetCustomAttributes(typeof(KnownTypeAttribute), true)
+                        knownTypes = route.RouteType.GetCustomAttributes(typeof(KnownTypeAttribute), true)
                             .Cast<KnownTypeAttribute>()
                             .Select(a => a.Type)
                             .ToArray();
@@ -147,81 +148,99 @@ namespace Kayson
             context.Response.AppendHeader("X-Response-Id", id);
             context.Response.StatusCode = response.StatusCode;
 
-            this.GetResponseWriter(context, writers).WriteResponse(context, request, response, knownTypes);
+            this.GetResponseWriter(context, route, writers).WriteResponse(context, request, response, knownTypes);
         }
 
         /// <summary>
         /// Gets the <see cref="IRequestReader"/> to use when reading the given HTTP context's request.
         /// </summary>
         /// <param name="context">The HTTP context to get the reader for.</param>
+        /// <param name="route">The Kayson route to get the reader for.</param>
         /// <param name="configuredReaders">A dictionary of readers defined in the current configuration.</param>
         /// <returns>An <see cref="IRequestReader"/> that can read the given HTTP context's request.</returns>
         /// <exception cref="System.InvalidOperationException"></exception>
-        protected virtual IRequestReader GetRequestReader(HttpContextBase context, IDictionary<string, Type> configuredReaders)
+        protected virtual IRequestReader GetRequestReader(HttpContextBase context, MatchedRoute route, IDictionary<string, Type> configuredReaders)
         {
-            string ct = context.Request.ContentType.ToUpperInvariant();
-            int separator = ct.IndexOf(';');
-
-            if (separator > 0)
+            if (route != null && route.ReaderType != null)
             {
-                ct = ct.Substring(0, separator);
+                return (IRequestReader)Activator.CreateInstance(route.ReaderType);
             }
-
-            if (configuredReaders.ContainsKey(ct))
+            else
             {
-                return (IRequestReader)Activator.CreateInstance(configuredReaders[ct]);
-            }
+                string ct = context.Request.ContentType.ToUpperInvariant();
+                int separator = ct.IndexOf(';');
 
-            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, "The request specifies a Content-Type ({0}) not in the configured reader list.", context.Request.ContentType));
+                if (separator > 0)
+                {
+                    ct = ct.Substring(0, separator);
+                }
+
+                if (configuredReaders.ContainsKey(ct))
+                {
+                    return (IRequestReader)Activator.CreateInstance(configuredReaders[ct]);
+                }
+
+                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, "The request specifies a Content-Type ({0}) not in the configured reader list.", context.Request.ContentType));
+            }
         }
 
         /// <summary>
         /// Gets the <see cref="IResponseWriter"/> to use when writing the given HTTP context's response.
         /// </summary>
         /// <param name="context">The HTTP context to get the writer for.</param>
+        /// <param name="route">The Kayson route to get the writer for.</param>
         /// <param name="configuredWriters">A dictionary of writers defined in the current configuration.</param>
         /// <returns>An <see cref="IResponseWriter"/> that can write the given HTTP context's response.</returns>
         /// <exception cref="System.InvalidOperationException"></exception>
-        protected virtual IResponseWriter GetResponseWriter(HttpContextBase context, IDictionary<string, Type> configuredWriters)
+        protected virtual IResponseWriter GetResponseWriter(HttpContextBase context, MatchedRoute route, IDictionary<string, Type> configuredWriters)
         {
-            foreach (string acceptType in context.Request.AcceptTypes)
+            if (route != null && route.WriterType != null)
             {
-                string at = acceptType.ToUpperInvariant();
-                int separator = at.IndexOf(';');
-
-                if (separator > 0)
-                {
-                    at = at.Substring(0, separator);
-                }
-
-                if (at.Equals("*/*", StringComparison.Ordinal))
-                {
-                    return new JsonResponseWriter();
-                }
-                else if (configuredWriters.ContainsKey(at))
-                {
-                    return (IResponseWriter)Activator.CreateInstance(configuredWriters[at]);
-                }
+                return (IResponseWriter)Activator.CreateInstance(route.WriterType);
             }
+            else
+            {
+                foreach (string acceptType in context.Request.AcceptTypes)
+                {
+                    string at = acceptType.ToUpperInvariant();
+                    int separator = at.IndexOf(';');
 
-            throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, "The request does not specify an Accept type ({0}) that is in the configured writer list.", String.Join("; ", context.Request.AcceptTypes)));
+                    if (separator > 0)
+                    {
+                        at = at.Substring(0, separator);
+                    }
+
+                    if (at.Equals("*/*", StringComparison.Ordinal))
+                    {
+                        return new JsonResponseWriter();
+                    }
+                    else if (configuredWriters.ContainsKey(at))
+                    {
+                        return (IResponseWriter)Activator.CreateInstance(configuredWriters[at]);
+                    }
+                }
+
+                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, "The request does not specify an Accept type ({0}) that is in the configured writer list.", String.Join("; ", context.Request.AcceptTypes)));
+            }
         }
-
+        
         /// <summary>
-        /// Gets the type of the request being made.
+        /// Gets the route for the given <see cref="HttpContextBase"/> context's request.
         /// </summary>
-        /// <param name="context">The context to use when getting the request type.</param>
-        /// <returns>The type of the request being made.</returns>
+        /// <param name="context">The context to get the route for.</param>
+        /// <returns>A route.</returns>
         /// <exception cref="Kayson.InvalidRequestTypeException"></exception>
-        protected virtual Type GetRequestType(HttpContextBase context)
+        protected virtual MatchedRoute GetRequestRoute(HttpContextBase context)
         {
-            try
+            MatchedRoute route = KaysonRouteModule.GetTargetRoute(context);
+
+            if (route != null)
             {
-                return Type.GetType(KaysonRouteModule.GetTargetRoute(context), true, true);
+                return route;
             }
-            catch (Exception ex)
+            else
             {
-                throw new InvalidRequestTypeException(ex.Message, ex);
+                throw new InvalidRequestTypeException();
             }
         }
 

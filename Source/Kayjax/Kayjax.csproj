@@ -84,6 +84,7 @@
     <Compile Include="Kayson\IResponseWriter.cs" />
     <Compile Include="Kayson\JsonRequestReader.cs" />
     <Compile Include="Kayson\JsonResponseWriter.cs" />
+    <Compile Include="Kayson\MatchedRoute.cs" />
     <Compile Include="Kayson\PermissionJoinType.cs" />
     <Compile Include="Kayson\RolePermissionAttribute.cs" />
     <Compile Include="Kayson\Configuration\KaysonSettings.cs" />

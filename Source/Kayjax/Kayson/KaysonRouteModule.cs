@@ -30,17 +30,20 @@ namespace Kayson
         /// Gets the target route for the given HTTP context.
         /// </summary>
         /// <param name="context">The HTTP context to get the target route for.</param>
-        /// <returns>A target route, or String.Empty if none was found.</returns>
-        public static string GetTargetRoute(HttpContextBase context)
+        /// <returns>A target route, or null if none was found.</returns>
+        public static MatchedRoute GetTargetRoute(HttpContextBase context)
         {
-            string route = null;
-
             if (context != null)
             {
-                route = (string)(context.Items[TargetItemsKey] ?? String.Empty);
+                MatchedRoute route = context.Items[TargetItemsKey] as MatchedRoute;
+
+                if (route != null)
+                {
+                    return new MatchedRoute(route);
+                }
             }
 
-            return route ?? String.Empty;
+            return null;
         }
 
         /// <summary>
@@ -64,9 +67,9 @@ namespace Kayson
         /// </summary>
         /// <param name="context">The request to get the route for.</param>
         /// <returns>The target of a Kayson route or null if none was found.</returns>
-        protected virtual string GetRoute(HttpContext context)
+        protected virtual MatchedRoute GetRoute(HttpContext context)
         {
-            string routesTo = null;
+            MatchedRoute routesTo = null;
             string virtualUrl = context.Request.RawUrl.Substring(context.Request.ApplicationPath.Length).ToUpperInvariant();
 
             if (!virtualUrl.StartsWith("/", StringComparison.Ordinal)) 
@@ -80,7 +83,7 @@ namespace Kayson
             lock (locker)
             {
                 // Grab or instantiate the cache.
-                Dictionary<string, string> cache = (Dictionary<string, string>)(context.Cache[RouteCacheKey] ?? new Dictionary<string, string>());
+                Dictionary<string, MatchedRoute> cache = (Dictionary<string, MatchedRoute>)(context.Cache[RouteCacheKey] ?? new Dictionary<string, MatchedRoute>());
 
                 // If we have something, we're done.
                 if (cache.ContainsKey(virtualUrl))
@@ -96,11 +99,18 @@ namespace Kayson
 
                         if (match.Success)
                         {
-                            routesTo = match.Result(route.RoutesTo);
+                            Type routeType = CreateTypeFromRouteString(match.Result(route.RoutesTo));
 
-                            if (!routesTo.Contains(","))
+                            if (routeType != null)
                             {
-                                routesTo += ", App_Code";
+                                routesTo = new MatchedRoute(
+                                    routeType,
+                                    CreateTypeFromRouteString(route.ReaderType),
+                                    CreateTypeFromRouteString(route.WriterType));
+                            }
+                            else
+                            {
+                                throw new InvalidRequestTypeException();
                             }
 
                             break;
@@ -120,11 +130,33 @@ namespace Kayson
         /// Rewrites the current request to the Kayson handler.
         /// </summary>
         /// <param name="context">The HttpContext to rewrite.</param>
-        /// <param name="routesTo">The target type in the Kayson route.</param>
-        protected virtual void Rewrite(HttpContext context, string routesTo)
+        /// <param name="routesTo">The target Kayson route.</param>
+        protected virtual void Rewrite(HttpContext context, MatchedRoute routesTo)
         {
             context.Items[TargetItemsKey] = routesTo;
             context.RewritePath(KaysonSettings.Section.HandlerUrl);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Type"/> from a type name found in a Kayson route.
+        /// </summary>
+        /// <param name="typeName">The name of the type to create.</param>
+        /// <returns>The created type.</returns>
+        private static Type CreateTypeFromRouteString(string typeName)
+        {
+            Type type = null;
+
+            if (!String.IsNullOrEmpty(typeName))
+            {
+                if (!typeName.Contains(","))
+                {
+                    typeName += ", App_Code";
+                }
+
+                type = Type.GetType(typeName, false, true);
+            }
+
+            return type;
         }
 
         /// <summary>
@@ -135,9 +167,9 @@ namespace Kayson
         private void ContextBeginRequest(object sender, EventArgs e)
         {
             HttpContext context = ((HttpApplication)sender).Context;
-            string routesTo = this.GetRoute(context);
+            MatchedRoute routesTo = this.GetRoute(context);
 
-            if (!String.IsNullOrEmpty(routesTo))
+            if (routesTo != null)
             {
                 this.Rewrite(context, routesTo);
             }
